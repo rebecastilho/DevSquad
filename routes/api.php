@@ -22,3 +22,4 @@ Route::get('/produto/show/{id}', 'ProdutoController@show');
 Route::post('/produto/update/{id}', 'ProdutoController@update');
 Route::delete('/produto/delete/{id}', 'ProdutoController@delete');
 Route::get('/produtos', 'ProdutoController@index');
+Route::get("/produto/pesquisa/{pesquisa}", 'ProdutoController@buscar');

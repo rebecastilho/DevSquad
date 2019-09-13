@@ -2089,6 +2089,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2130,27 +2132,85 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      produtos: []
+      produtos: [],
+      pages: [],
+      source: [],
+      pesquisa: {}
     };
   },
   created: function created() {
     var _this = this;
 
-    var uri = 'http://localhost:8000/api/produtos';
+    var uri = "http://localhost:8000/api/produtos?page=1";
     this.axios.get(uri).then(function (response) {
       _this.produtos = response.data.data;
+      _this.source = response.data.meta;
+      _this.pages = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["range"])(1, _this.source.last_page + 1);
     });
   },
   methods: {
-    deleteProduto: function deleteProduto(id) {
+    navegar: function navegar(page) {
       var _this2 = this;
+
+      var uri = "http://localhost:8000/api/produtos?page=".concat(page);
+      this.axios.get(uri).then(function (response) {
+        _this2.produtos = response.data.data;
+      });
+      this.source.current_page = page;
+    },
+    pesquisar: function pesquisar() {
+      var _this3 = this;
+
+      var uri = "http://localhost:8000/api/produto/pesquisa/".concat(this.pesquisa.nome);
+      this.axios.get(uri).then(function (response) {
+        _this3.produtos = response.data.data;
+        _this3.source = response.data.meta;
+        _this3.pages = Object(lodash__WEBPACK_IMPORTED_MODULE_0__["range"])(1, _this3.source.last_page + 1);
+      });
+    },
+    deleteProduto: function deleteProduto(id) {
+      var _this4 = this;
 
       var uri = "http://localhost:8000/api/produto/delete/".concat(id);
       this.axios["delete"](uri).then(function (response) {
-        _this2.produtos.splice(_this2.produtos.indexOf(id), 1);
+        _this4.produtos.splice(_this4.produtos.indexOf(id), 1);
       });
     }
   }
@@ -38030,7 +38090,7 @@ var render = function() {
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header" }, [
-            _vm._v("\n                    Produtos\n                    "),
+            _vm._v("\n          Produtos\n          "),
             _c(
               "div",
               { staticClass: "float-right" },
@@ -38049,6 +38109,59 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row justify-content-center" }, [
+              _c(
+                "form",
+                {
+                  staticClass: "form-inline my-2 my-lg-0",
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.pesquisar($event)
+                    }
+                  }
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.pesquisa.nome,
+                        expression: "pesquisa.nome"
+                      }
+                    ],
+                    staticClass: "form-control mr-sm-2",
+                    attrs: {
+                      type: "search",
+                      placeholder: "Pesquisar",
+                      "aria-label": "Pesquisar"
+                    },
+                    domProps: { value: _vm.pesquisa.nome },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.pesquisa, "nome", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-outline-success my-2 my-sm-0",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v("Pesquisar")]
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
@@ -38104,6 +38217,38 @@ var render = function() {
                       1
                     )
                   ])
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("nav", { attrs: { "aria-label": "Paginas" } }, [
+              _c(
+                "ul",
+                { staticClass: "pagination justify-content-center" },
+                _vm._l(_vm.pages, function(page) {
+                  return _c(
+                    "li",
+                    {
+                      key: page,
+                      staticClass: "page-item",
+                      class: { active: _vm.source.current_page == page }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "page-link",
+                          on: {
+                            click: function($event) {
+                              return _vm.navegar(page)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(page))]
+                      )
+                    ]
+                  )
                 }),
                 0
               )

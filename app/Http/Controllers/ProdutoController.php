@@ -10,7 +10,7 @@ class ProdutoController extends Controller
 {
     public function index()
     {
-      return new ProdutoCollection(Produto::orderBy('nome','asc')->get());
+      return new ProdutoCollection(Produto::orderBy('nome','asc')->paginate(2));
     }
 
     public function store(Request $request)
@@ -44,4 +44,10 @@ class ProdutoController extends Controller
 
       return response()->json('sucesso');
     }
+
+    public function buscar($pesquisa){
+      $pesquisa = "%" . $pesquisa . "%";
+      return new ProdutoCollection((Produto::where('nome','like', $pesquisa)->paginate(1)));
+    }
+
 }
