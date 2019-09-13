@@ -28,7 +28,9 @@
                 <div class="col-md-8 offset-md-2">
                   <div class="form-group">
                     <label>Categoria:</label>
-                    <input type="text" class="form-control" v-model="produto.categoria_id" />
+                    <select v-model="produto.categoria_id" class="form-control">
+                          <option :value="categoria.id" v-for = "categoria in categorias" :key="categoria.id">{{categoria.nome}}</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -58,13 +60,17 @@
 
       data() {
         return {
-          produto: {}
+          produto: {},
+          categorias: {},
+          categoriaAtual : {}
         }
       },
       created() {
         let uri = `http://localhost:8000/api/produto/show/${this.$route.params.id}`;
         this.axios.get(uri).then((response) => {
-            this.produto = response.data;
+            this.produto = response.data.produto;
+            this.categorias = response.data.categorias;
+            this.categoriaAtual = response.data.categoria_atual;
         });
       },
       methods: {

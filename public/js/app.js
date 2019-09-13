@@ -1931,22 +1931,76 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      produto: {}
+      produto: {},
+      categorias: [],
+      urlImage: "http://loja.muchiutt.com.br/images/sem-imagem-veiculo.png"
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.produto.imagem = this.urlImage;
+    var uri = "http://localhost:8000/api/produto/categorias";
+    this.axios.get(uri).then(function (response) {
+      _this.categorias = response.data;
+    });
   },
   methods: {
     addProduto: function addProduto() {
-      var _this = this;
-
+      var data = new FormData();
+      data.append("imagem", this.produto.imagem);
+      data.append('nome', this.produto.nome);
+      data.append('descricao', this.produto.descricao);
+      data.append('categoria_id', this.produto.categoria_id);
+      data.append('preco', this.produto.preco);
+      console.log(data.get('imagem'));
       var uri = "http://localhost:8000/api/produto/create";
-      this.axios.post(uri, this.produto).then(function (response) {
-        _this.$router.push({
-          name: "produtos"
-        });
+      this.axios.post(uri, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        console.log(response);
       });
+    },
+    onImageChange: function onImageChange(e) {
+      this.produto.imagem = e.target.files[0];
+      this.urlImage = URL.createObjectURL(this.produto.imagem);
     }
   }
 });
@@ -2017,10 +2071,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      produto: {}
+      produto: {},
+      categorias: {},
+      categoriaAtual: {}
     };
   },
   created: function created() {
@@ -2028,7 +2086,9 @@ __webpack_require__.r(__webpack_exports__);
 
     var uri = "http://localhost:8000/api/produto/show/".concat(this.$route.params.id);
     this.axios.get(uri).then(function (response) {
-      _this.produto = response.data;
+      _this.produto = response.data.produto;
+      _this.categorias = response.data.categorias;
+      _this.categoriaAtual = response.data.categoria_atual;
     });
   },
   methods: {
@@ -2198,6 +2258,7 @@ __webpack_require__.r(__webpack_exports__);
     pesquisar: function pesquisar() {
       var _this3 = this;
 
+      console.log(this.pesquisa.nome);
       var uri = "http://localhost:8000/api/produto/pesquisa/".concat(this.pesquisa.nome);
       this.axios.get(uri).then(function (response) {
         _this3.produtos = response.data.data;
@@ -2255,10 +2316,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      produto: {}
+      produto: {},
+      url: null
     };
   },
   created: function created() {
@@ -2266,7 +2331,8 @@ __webpack_require__.r(__webpack_exports__);
 
     var uri = "http://localhost:8000/api/produto/show/".concat(this.$route.params.id);
     this.axios.get(uri).then(function (response) {
-      _this.produto = response.data;
+      _this.produto = response.data.produto;
+      _this.url = response.data.url + _this.produto.imagem.replace("public", "storage");
     });
   }
 });
@@ -37607,7 +37673,7 @@ var render = function() {
               [
                 _c(
                   "router-link",
-                  { staticClass: "nav-link", attrs: { to: "/create" } },
+                  { staticClass: "nav-link", attrs: { to: "/produto/create" } },
                   [_vm._v("Criar Produto")]
                 )
               ],
@@ -37620,7 +37686,10 @@ var render = function() {
               [
                 _c(
                   "router-link",
-                  { staticClass: "nav-link", attrs: { to: "/produtos" } },
+                  {
+                    staticClass: "nav-link",
+                    attrs: { to: "/produto/produtos" }
+                  },
                   [_vm._v("Listar Produto")]
                 )
               ],
@@ -37670,6 +37739,7 @@ var render = function() {
             _c(
               "form",
               {
+                attrs: { enctype: "multipart/form-data" },
                 on: {
                   submit: function($event) {
                     $event.preventDefault()
@@ -37678,6 +37748,40 @@ var render = function() {
                 }
               },
               [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-md-8 offset-md-4" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "divImage" }, [
+                        _c("input", {
+                          staticClass: "custom-file-input form-control",
+                          attrs: {
+                            name: "file",
+                            id: "foto",
+                            hidden: "",
+                            type: "file",
+                            accept: "image/jpeg, image/png",
+                            lang: "pt-br"
+                          },
+                          on: { change: _vm.onImageChange }
+                        }),
+                        _vm._v(" "),
+                        _c("img", {
+                          staticClass: "rounded-circle border border-dark",
+                          attrs: {
+                            width: "120vw",
+                            src: _vm.urlImage,
+                            id: "imagemProduto"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "comentario" }, [
+                          _vm._v("Enviar Foto")
+                        ])
+                      ])
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-md-8 offset-md-2" }, [
                     _c("div", { staticClass: "form-group" }, [
@@ -37747,31 +37851,61 @@ var render = function() {
                     _c("div", { staticClass: "form-group" }, [
                       _c("label", [_vm._v("Categoria:")]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.produto.categoria_id,
-                            expression: "produto.categoria_id"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text" },
-                        domProps: { value: _vm.produto.categoria_id },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.produto.categoria_id,
+                              expression: "produto.categoria_id"
                             }
-                            _vm.$set(
-                              _vm.produto,
-                              "categoria_id",
-                              $event.target.value
-                            )
+                          ],
+                          staticClass: "form-control",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.produto,
+                                "categoria_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
                           }
-                        }
-                      })
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              staticClass: "selected",
+                              attrs: { value: "", disabled: "" }
+                            },
+                            [_vm._v("Escolha uma Categoria....")]
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.categorias, function(categoria) {
+                            return _c(
+                              "option",
+                              {
+                                key: categoria.id,
+                                domProps: { value: categoria.id }
+                              },
+                              [_vm._v(_vm._s(categoria.nome))]
+                            )
+                          })
+                        ],
+                        2
+                      )
                     ])
                   ])
                 ]),
@@ -37937,31 +38071,50 @@ var render = function() {
                     _c("div", { staticClass: "form-group" }, [
                       _c("label", [_vm._v("Categoria:")]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.produto.categoria_id,
-                            expression: "produto.categoria_id"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text" },
-                        domProps: { value: _vm.produto.categoria_id },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.produto.categoria_id,
+                              expression: "produto.categoria_id"
                             }
-                            _vm.$set(
-                              _vm.produto,
-                              "categoria_id",
-                              $event.target.value
-                            )
+                          ],
+                          staticClass: "form-control",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.produto,
+                                "categoria_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
                           }
-                        }
-                      })
+                        },
+                        _vm._l(_vm.categorias, function(categoria) {
+                          return _c(
+                            "option",
+                            {
+                              key: categoria.id,
+                              domProps: { value: categoria.id }
+                            },
+                            [_vm._v(_vm._s(categoria.nome))]
+                          )
+                        }),
+                        0
+                      )
                     ])
                   ])
                 ]),
@@ -38307,6 +38460,13 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-4" }, [
+                _vm._v("Imagem : "),
+                _c("img", { attrs: { src: _vm.url } })
+              ])
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-md-4" }, [
                 _vm._v("Nome : " + _vm._s(_vm.produto.nome))
@@ -53424,19 +53584,19 @@ var routes = [{
   component: _components_HomeComponent_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
 }, {
   name: 'create',
-  path: '/create',
+  path: '/produto/create',
   component: _components_CreateComponent_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
 }, {
   name: 'produtos',
-  path: '/produtos',
+  path: '/produto/produtos',
   component: _components_IndexComponent_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
 }, {
   name: 'edit',
-  path: '/edit/:id',
+  path: '/produto/edit/:id',
   component: _components_EditComponent_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
 }, {
   name: 'show',
-  path: '/show/:id',
+  path: '/produto/show/:id',
   component: _components_ShowComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({

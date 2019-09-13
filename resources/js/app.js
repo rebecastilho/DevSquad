@@ -38,22 +38,22 @@ const routes = [
   },
   {
       name: 'create',
-      path: '/create',
+      path: '/produto/create',
       component: CreateComponent
   },
   {
       name: 'produtos',
-      path: '/produtos',
+      path: '/produto/produtos',
       component: IndexComponent
   },
   {
       name: 'edit',
-      path: '/edit/:id',
+      path: '/produto/edit/:id',
       component: EditComponent
   },
   {
     name: 'show',
-    path: '/show/:id',
+    path: '/produto/show/:id',
     component: ShowComponent
 }
 ];

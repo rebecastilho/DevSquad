@@ -7,6 +7,9 @@
 
           <div class="card-body">
             <div class="row">
+              <div class="col-md-4">Imagem : <img :src="url" /></div>
+            </div>
+            <div class="row">
               <div class="col-md-4">Nome : {{produto.nome}}</div>
             </div>
             <div class="row">
@@ -30,13 +33,15 @@
 export default {
   data() {
     return {
-      produto: {}
+      produto: {},
+      url : null
     };
   },
   created() {
     let uri = `http://localhost:8000/api/produto/show/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
-      this.produto = response.data;
+      this.produto = response.data.produto;
+      this.url =  response.data.url + this.produto.imagem.replace("public","storage");
     });
   }
 };

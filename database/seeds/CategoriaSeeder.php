@@ -12,5 +12,6 @@ class CategoriaSedeer extends Seeder
                 ['nome' => 'Câmera'],
             ]);
            
+            Model::unguard();
         }
 }

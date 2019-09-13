@@ -15,6 +15,7 @@ class CreateProdutoTable extends Migration
             $table->increments('id');
             $table->string('nome',64)->unique();
             $table->string('descricao',255);
+            $table->string('imagem');
             $table->integer('categoria_id')->unsigned();
             $table->foreign('categoria_id')->references('id')->on('categoria');
             $table->double('preco');

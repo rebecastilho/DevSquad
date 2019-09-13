@@ -101,6 +101,7 @@ export default {
       this.source.current_page = page;
     },
     pesquisar() {
+      console.log(this.pesquisa.nome);
       let uri = `http://localhost:8000/api/produto/pesquisa/${this.pesquisa.nome}`;
       this.axios.get(uri).then(response => {
         this.produtos = response.data.data;

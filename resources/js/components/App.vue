@@ -6,10 +6,10 @@
           <router-link to="/" class="nav-link">Home</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/create" class="nav-link">Criar Produto</router-link>
+          <router-link to="/produto/create" class="nav-link">Criar Produto</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/produtos" class="nav-link">Listar Produto</router-link>
+          <router-link to="/produto/produtos" class="nav-link">Listar Produto</router-link>
         </li>
       </ul>
     </nav><br />

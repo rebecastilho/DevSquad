@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\{Produto,Categoria};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Http\Resources\ProdutoCollection;
 
 class ProdutoController extends Controller
@@ -15,20 +16,34 @@ class ProdutoController extends Controller
 
     public function store(Request $request)
     {
-          $produto = new Produto([
+    
+        $dados = [
             'nome' => $request->get('nome'),
             'categoria_id' => $request->get('categoria_id'),
-            'preco' => $request->get('preco'),
-            'descricao' => $request->get('descricao')
-          ]);
+            'descricao' => $request->get('descricao'),
+            'preco' => $request->get('preco')
+         ];
+
+         if($request->hasFile('imagem')){
+            $dados['imagem'] = $request->file('imagem')->store('public/img');
+         }
+         else{
+           $dados['imagem'] = "default.jpg";
+         }
+          $produto = Produto::create($dados);
           $produto->save();
-          return response()->json('sucesso');
+        return response()->json('success');
     }
 
     public function show($id)
     {
-      $produto = Produto::findorFail($id);
-      return response()->json($produto);
+      $data = [
+        'categorias' => Categoria::all(),
+        'produto' => Produto::findorFail($id),
+        'url' => asset('/'),
+        'categoria_atual' => Produto::findOrFail($id)->categoria->nome
+      ];
+      return response()->json($data);
     }
 
     public function update(Request $request,$id){
@@ -46,8 +61,15 @@ class ProdutoController extends Controller
     }
 
     public function buscar($pesquisa){
+      if($pesquisa == ""){
+        return new ProdutoCollection((Produto::orderBy('nome','asc')->paginate(1)));  
+      }
       $pesquisa = "%" . $pesquisa . "%";
       return new ProdutoCollection((Produto::where('nome','like', $pesquisa)->paginate(1)));
+    }
+
+    public function categorias(){
+      return response()->json(Categoria::all());
     }
 
 }

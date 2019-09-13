@@ -9,9 +9,30 @@
         <meta name="csrf-token" value="{{ csrf_token() }}" />
     </head>
     <body>
+    <style>
+    .divImage:hover {
+      opacity: 0.6;
+      transition: 0.2s;
+    }
+    .divImage:hover .comentario {
+      display: block;
+    }
+    .comentario {
+      display: none;
+      position: absolute;
+      top: 5vh;
+      margin-left: 1.5em;
+      color:#FFF;
+    }
+  </style>
       <div id="app">
           
       </div>
       <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
+      <script>
+        $('#imagemProduto').click(function(){
+  $('#foto').click();
+});
+        </script>
     </body>
 </html>

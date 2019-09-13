@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/{any}', function () {
+Route::get('/produto/{any}', function () {
     return view('produto.index');
   })->where('any', '.*');
 
