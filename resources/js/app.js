@@ -23,6 +23,8 @@ import axios from 'axios';
 import App from './components/App.vue';
 Vue.use(VueAxios, axios);
 
+import { ValidationProvider, extend } from 'vee-validate';
+Vue.component('ValidationProvider', ValidationProvider);
 
 import HomeComponent from './components/HomeComponent.vue';
 import ShowComponent from './components/ShowComponent.vue';
